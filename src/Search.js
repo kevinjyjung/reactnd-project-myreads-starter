@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
-import Book from './Book'
+import BooksGrid from './BooksGrid'
 import './App.css'
 
 class Search extends Component {
@@ -36,7 +36,6 @@ class Search extends Component {
   }
 
   async onInputChange(value) {
-    console.log(value)
     this.setState({input: value})
     await this.getBooks(value)
   }
@@ -69,20 +68,10 @@ class Search extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid">
-            {this.state.books.map(
-              (book) => (
-                <li key={book.id}>
-                  <Book
-                    backgroundImage={book.backgroundImage}
-                    title={book.title}
-                    authors={book.authors}
-                    onShelfChange={(event) => this.onShelfChange(book.id, event.target.value)}
-                    shelf={book.shelf}
-                  />
-                </li>
-              ))}
-          </ol>
+          <BooksGrid
+            onShelfChange={(id, value) => this.onShelfChange(id, value)}
+            books={this.state.books}
+          />
         </div>
       </div>
     )
