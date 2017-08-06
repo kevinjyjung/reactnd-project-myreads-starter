@@ -17,7 +17,7 @@ class Book extends Component {
           </div>
           <div className="book-shelf-changer">
             <select value={this.props.shelf} onChange={this.props.onShelfChange}>
-              <option value="none" disabled>Move to...</option>
+              <option value="" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
               <option value="read">Read</option>
@@ -37,7 +37,7 @@ Book.propTypes = {
   title: PropTypes.string.isRequired,
   authors: PropTypes.array,
   onShelfChange: PropTypes.func.isRequired,
-  shelf: PropTypes.string
+  shelf: PropTypes.string.isRequired
 }
 
 export default Book;

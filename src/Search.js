@@ -10,23 +10,22 @@ class Search extends Component {
     books: []
   }
 
-  async onInputChange(value) {
-    console.log(value)
-    this.setState({input: value})
+  async getBooks(value) {
     try {
       const booksRaw = value && await BooksAPI.search(value, 20)
       if (booksRaw && booksRaw.length > 0) {
-        this.setState({
-          books: booksRaw.map((book) => {
-              return {
-                id: book.id,
-                title: book.title,
-                subtitle: book.subtitle,
-                authors: book.authors,
-                backgroundImage: `url("${book.imageLinks.smallThumbnail}")`,
-                shelf: book.shelf
-              }
-            })
+        Promise.all(booksRaw.map(async (book) => {
+          let b = await BooksAPI.get(book.id)
+          return {
+            id: book.id,
+            title: book.title,
+            subtitle: book.subtitle,
+            authors: book.authors,
+            backgroundImage: `url("${book.imageLinks.smallThumbnail}")`,
+            shelf: b.shelf
+          }
+        })).then((books) => {
+          this.setState({books})
         })
       } else {
         this.setState({books: []})
@@ -36,9 +35,16 @@ class Search extends Component {
     }
   }
 
+  async onInputChange(value) {
+    console.log(value)
+    this.setState({input: value})
+    await this.getBooks(value)
+  }
+
   async onShelfChange(id, value) {
     try {
       await BooksAPI.update({id}, value)
+      await this.getBooks(this.state.input)
     } catch (err) {
       console.log("Error updating book: " + err)
     }

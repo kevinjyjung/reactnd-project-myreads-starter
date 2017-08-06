@@ -15,7 +15,6 @@ class Main extends Component {
 
   async getBooks() {
     try {
-      let books = {}
       const booksRaw = await BooksAPI.getAll()
       this.setState({
         books: booksRaw.map((book) => {
