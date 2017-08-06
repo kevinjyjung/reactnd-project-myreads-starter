@@ -26,7 +26,7 @@ class Book extends Component {
           </div>
         </div>
         <div className="book-title">{this.props.title}</div>
-        <div className="book-authors">{this.props.authors.join(", ")}</div>
+        <div className="book-authors">{this.props.authors && this.props.authors.join(", ")}</div>
       </div>
     );
   }
@@ -35,7 +35,7 @@ class Book extends Component {
 Book.propTypes = {
   backgroundImage: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  authors: PropTypes.array.isRequired,
+  authors: PropTypes.array,
   onShelfChange: PropTypes.func.isRequired,
   shelf: PropTypes.string
 }
