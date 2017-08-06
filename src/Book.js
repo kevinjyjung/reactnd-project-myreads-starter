@@ -16,7 +16,7 @@ class Book extends Component {
             }}>
           </div>
           <div className="book-shelf-changer">
-            <select>
+            <select value={this.props.shelf} onChange={this.props.onShelfChange}>
               <option value="none" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
@@ -26,7 +26,7 @@ class Book extends Component {
           </div>
         </div>
         <div className="book-title">{this.props.title}</div>
-        <div className="book-authors">{this.props.authors}</div>
+        <div className="book-authors">{this.props.authors.join(", ")}</div>
       </div>
     );
   }
@@ -35,7 +35,9 @@ class Book extends Component {
 Book.propTypes = {
   backgroundImage: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  authors: PropTypes.string.isRequired
+  authors: PropTypes.array.isRequired,
+  onShelfChange: PropTypes.func.isRequired,
+  shelf: PropTypes.string
 }
 
 export default Book;
