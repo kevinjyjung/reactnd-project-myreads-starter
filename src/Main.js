@@ -4,18 +4,27 @@ import * as BooksAPI from './BooksAPI'
 import Shelf from './Shelf'
 import './App.css'
 
+/**
+* @description Main page showing shelves
+*/
 class Main extends Component {
   state = {
     books: []
-  }
+  };
 
+  /**
+  * @description Populates books when page first loads
+  */
   async componentDidMount() {
     await this.getBooks();
   }
 
+  /**
+  * @description Makes API call to get all books on shelves
+  */
   async getBooks() {
     try {
-      const booksRaw = await BooksAPI.getAll()
+      const booksRaw = await BooksAPI.getAll();
       this.setState({
         books: booksRaw.map((book) => {
             return {
@@ -25,20 +34,25 @@ class Main extends Component {
               authors: book.authors,
               backgroundImage: `url("${book.imageLinks.smallThumbnail}")`,
               shelf: book.shelf
-            }
+            };
           })
-      })
+      });
     } catch (err) {
-      console.log("Error getting books in bookshelf")
+      console.log("Error getting books in bookshelf");
     }
   }
 
+  /**
+  * @description Handles moving books between shelves
+  * @param {string} id - Book ID
+  * @param {string} value - New shelf
+  */
   async onShelfChange(id, value) {
     try {
-      await BooksAPI.update({id}, value)
-      await this.getBooks()
+      await BooksAPI.update({id}, value);
+      await this.getBooks();
     } catch (err) {
-      console.log("Error updating books")
+      console.log("Error updating books");
     }
   }
 
@@ -81,4 +95,4 @@ class Main extends Component {
   }
 }
 
-export default Main
+export default Main;

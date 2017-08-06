@@ -3,6 +3,9 @@ import BooksGrid from './BooksGrid'
 import PropTypes from 'prop-types'
 import './App.css'
 
+/**
+* @description Shelf component for the main page
+*/
 class Shelf extends Component {
   render() {
     return (
@@ -27,4 +30,4 @@ Shelf.propTypes = {
   books: PropTypes.array
 }
 
-export default Shelf
+export default Shelf;
