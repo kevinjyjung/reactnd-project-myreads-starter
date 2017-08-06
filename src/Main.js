@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Link, Route } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
+import Shelf from './Shelf'
 import './App.css'
 
 class Main extends Component {
@@ -10,10 +11,13 @@ class Main extends Component {
   }
 
   async componentDidMount() {
+    await this.getBooks();
+  }
+
+  async getBooks() {
     try {
       let books = {}
       const booksRaw = await BooksAPI.getAll()
-      console.log(booksRaw)
       this.setState({
         books: booksRaw.map((book) => {
             return {
@@ -31,40 +35,13 @@ class Main extends Component {
     }
   }
 
-  onShelfChange(id, value) {
-    this.setState({
-      books: this.state.books.map((book) => {
-        if (book.id === id) {
-          book.shelf = value
-        }
-        return book
-      })
-    })
-  }
-
-  getShelf(shelf, shelfTitle) {
-    return (
-      <div className="bookshelf">
-        <h2 className="bookshelf-title">{shelfTitle}</h2>
-        <div className="bookshelf-books">
-          <ol className="books-grid">
-            {this.state.books
-              .filter((book) => book.shelf === shelf)
-              .map((book) => (
-                <li key={book.id}>
-                  <Book
-                    backgroundImage={book.backgroundImage}
-                    title={book.title}
-                    authors={book.authors}
-                    onShelfChange={(event) => this.onShelfChange(book.id, event.target.value)}
-                    shelf={book.shelf}
-                  />
-                </li>
-              ))}
-          </ol>
-        </div>
-      </div>
-    )
+  async onShelfChange(id, value) {
+    try {
+      await BooksAPI.update({id}, value)
+      await this.getBooks()
+    } catch (err) {
+      console.log("Error updating books")
+    }
   }
 
   render() {
@@ -75,9 +52,24 @@ class Main extends Component {
         </div>
         <div className="list-books-content">
           <div>
-            {this.getShelf("currentlyReading", "Currently Reading")}
-            {this.getShelf("wantToRead", "Want to Read")}
-            {this.getShelf("read", "Read")}
+            <Shelf
+              shelf="currentlyReading"
+              shelfTitle="Currently Reading"
+              onShelfChange={(id, value) => this.onShelfChange(id, value)}
+              books={this.state.books}
+            />
+            <Shelf
+              shelf="wantToRead"
+              shelfTitle="Want to Read"
+              onShelfChange={(id, value) => this.onShelfChange(id, value)}
+              books={this.state.books}
+            />
+            <Shelf
+              shelf="read"
+              shelfTitle="Read"
+              onShelfChange={(id, value) => this.onShelfChange(id, value)}
+              books={this.state.books}
+            />
           </div>
         </div>
         <div className="open-search">
